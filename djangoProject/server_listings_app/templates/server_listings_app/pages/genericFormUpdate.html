@@ -1,0 +1,32 @@
+{% extends "server_listings_app/base_template.html" %}
+{% load widget_tweaks %}
+
+{% block content %}
+<div class="container">
+  <div class="row justify-content-center">
+    <div class="col-md-6">
+      <h2 class="text-center mb-4">Update {{title}}</h2>
+      <form method="post" class="needs-validation" novalidate>
+        {% csrf_token %}
+        {% for field in form %}
+          <div class="mb-3">
+            {% if field.field.widget.input_type != 'checkbox' %}
+              <label for="{{ field.id_for_label }}" class="form-label">{{ field.label }}</label>
+              {{ field|add_class:"form-control" }}
+            {% else %}
+              <div class="form-check">
+                {{ field }}
+                <label class="form-check-label" for="{{ field.id_for_label }}">{{ field.label }}</label>
+              </div>
+            {% endif %}
+            <div class="invalid-feedback">
+              {{ field.errors }}
+            </div>
+          </div>
+        {% endfor %}
+        <button type="submit" class="btn btn-primary">Submit</button>
+      </form>
+    </div>
+  </div>
+</div>
+{% endblock %}

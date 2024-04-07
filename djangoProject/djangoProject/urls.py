@@ -21,5 +21,5 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     
     #pipe paths directly to our app
-    path('', include('server_listings_app.urls'))
+    path('', include('server_listings_app.urls')),
 ]

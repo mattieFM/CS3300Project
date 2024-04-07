@@ -15,10 +15,24 @@ Including another URLconf
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
 from django.contrib import admin
-from django.urls import path, include
+from django.urls import path, include, re_path
 from . import views
+from .models import Server
+from .forms import ServerForm
 
 urlpatterns = [
     #pipe paths directly to our app
-    path('', views.index, name="index")
+    path('', views.index, name="index"),
+    
+    #temp login functionality
+    path('', views.index, name="login"),
+    path('', views.index, name="logout"),
+        
+    #server details page
+    path('server/<int:server_pk>/', views.server, name='server'),
+    
+    
+    #server update page
+    path('server_update/<int:id>/', views.generic_update, {'Model':Server, 'Form': ServerForm, 'returnView': 'server/'}, name='server_update'),
+    re_path(r'^server_delete/(?P<id>[0-9]+)/(?P<backToView>\w*).*', views.generic_delete, {'Model':Server}, name='server_delete'),
 ]
