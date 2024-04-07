@@ -1,0 +1,12 @@
+{% extends "server_listings_app/base_template.html" %}
+
+{% block content %}
+<div class="container mt-4">
+    <div class="alert alert-success" role="alert">
+        <h4 class="alert-heading">Success!</h4>
+        <p>The object was successfully deleted.</p>
+        <hr>
+        <p class="mb-0">You can go back to <a href="{% url 'index' %}">home</a> or perform other actions.</p>
+    </div>
+</div>
+{% endblock %}
