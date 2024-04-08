@@ -16,7 +16,32 @@
             
         </h5>
         <div class="card-body">
+            {% if server.serverHost %}
+                <p>Host: {{server.serverHost.username}}</p>
+            {% endif %}
+
             <p>Description: {{ server.description }}</p>
+            {% if server.password %}
+                <p>Server is password protected</p>
+            {% else %}
+                <p>Connection Key: {{ server.connectionKey }}</p>
+            {% endif %}
+
+            {% if server.dateStarted %}
+            <p>Server started at: {{server.dateStarted}}</p>
+            {% endif %}
+
+            {% if server.serverClients and server.is_active  %}
+                <p>Clients: 
+                    {% for client in server.serverClients.all %}
+                        <a href={% url 'user' client.id%}>{{client.username}}</a>, 
+                    {% endfor%}
+                </p>
+            {% endif %}
+
+            {% if server.is_active == 0 %}
+                <p>Server Closed at: {{server.dateEnded}}</p>
+            {% endif %}
             <!-- Add other server fields as needed -->
             <div class="card-footer text-muted">
                 <a class="btn btn-secondary" href="{% url 'server' server.id %}">View server</a>

@@ -22,12 +22,12 @@ from .forms import ServerForm, UserForm
 
 urlpatterns = [
     #pipe paths directly to our app
-    path('', views.index, name="index"),
+    path('', views.search_servers, name="index", kwargs={'activeOnly':True}),
     path('servers/', views.search_servers, name="search_servers"),
     
     #temp login functionality
-    path('', views.index, name="login"),
-    path('', views.index, name="logout"),
+    path('', views.search_servers, name="login"),
+    path('', views.search_servers, name="logout"),
         
     #server details page
     path('server/<int:server_pk>/', views.server, name='server'),
@@ -41,14 +41,14 @@ urlpatterns = [
     
     
     #server update page
-    path(r'^server_update/(?P<id>[0-9]+)/(?P<backToView>\w*)/(?P<useArgs>[0,1])/.*', views.generic_update, {'Model':Server, 'Form': ServerForm, 'title':"server"}, name='server_update'),
-    path(r'^server_create/(?P<id>[0-9]+)/(?P<backToView>\w*)/(?P<useArgs>[0,1])/.*', views.generic_update, {'Model':Server, 'Form': ServerForm, 'title':"server"}, name='server_create'),
+    re_path(r'^server_update/(?P<id>[0-9]+)/(?P<backToView>\w*)/(?P<useArgs>[0,1])/.*', views.generic_update, {'Model':Server, 'Form': ServerForm, 'title':"server"}, name='server_update'),
+    re_path(r'^server_create/(?P<id>[0-9]+)/(?P<backToView>\w*)/(?P<useArgs>[0,1])/.*', views.generic_update, {'Model':Server, 'Form': ServerForm, 'title':"server"}, name='server_create'),
     re_path(r'^server_delete/(?P<id>[0-9]+)/(?P<backToView>\w*).*', views.generic_delete, {'Model':Server}, name='server_delete'),
 
     
     #user update page
-    path(r'^user_update/(?P<id>[0-9]+)/(?P<backToView>\w*)/(?P<useArgs>[0,1])/.*', views.generic_update, {'Model':User, 'Form': UserForm, 'title':"user"}, name='user_update'),
-    path(r'^user_create/(?P<id>[0-9]+)/(?P<backToView>\w*)/(?P<useArgs>[0,1])/.*', views.generic_update, {'Model':User, 'Form': UserForm, 'title':"user"}, name='user_create'),
+    re_path(r'^user_update/(?P<id>[0-9]+)/(?P<backToView>\w*)/(?P<useArgs>[0,1])/.*', views.generic_update, {'Model':User, 'Form': UserForm, 'title':"user"}, name='user_update'),
+    re_path(r'^user_create/(?P<id>[0-9]+)/(?P<backToView>\w*)/(?P<useArgs>[0,1])/.*', views.generic_update, {'Model':User, 'Form': UserForm, 'title':"user"}, name='user_create'),
     re_path(r'^user_delete/(?P<id>[0-9]+)/(?P<backToView>\w*).*', views.generic_delete, {'Model':User}, name='user_delete'),
 
     #server lobby handlers

@@ -11,6 +11,12 @@
     }
 </script>
 {% include "server_listings_app/components/user_card.html" with user=user %}
+{% if user.currentServer %}
+<h3>Currently Playing in:</h3>
+{% include "server_listings_app/components/server_card.html" with server=user.currentServer %}
+{% else %}
+<p>user not currently in a server </p>
+{% endif %}
 {% ifDemo %}
         <form action="{% url 'user_delete' user.id 'users' %}" method="post" onsubmit="return confirmSubmission();">
             {% csrf_token %}

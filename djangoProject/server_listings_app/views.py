@@ -13,12 +13,14 @@ def index(request):
     # Render index.html
     return render( request, 'server_listings_app/pages/index.html', {'active_servers':active_servers})
 
-def search_servers(request):
+def search_servers(request, activeOnly=False):
     query = request.GET.get('q')
     if(query == None):
         query=""
     #name__icontains is case insenstitive containment test see: https://docs.djangoproject.com/en/2.1/ref/models/querysets/#icontains
     servers = Server.objects.filter(title__icontains=query)
+    if(activeOnly):
+        servers = servers.filter(is_active=True)
     # Render index.html
     return render( request, 'server_listings_app/pages/servers.html', {'active_servers':servers})
 
@@ -126,18 +128,20 @@ def generic_delete(request, id, Model, backToView=None):
 def add_client_to_server(reqeust, clientid, serverid):
     try:
         server = Server.objects.get(pk=serverid)
-        server.serverClients.add(User.objects.get(pk=clientid))
+        user=User.objects.get(pk=clientid)
+        user.currentServer=server
+        server.serverClients.add(user)
         return JsonResponse({'status':200})
     except Exception as err:
         return JsonResponse({'status':400,'err':err})
 
     
-    
-    
 def remove_client_from_server(reqeust, clientid, serverid):
     try:
         server = Server.objects.get(pk=serverid)
-        server.serverClients.remove(User.objects.get(pk=clientid))
+        user=User.objects.get(pk=clientid)
+        user.currentServer=None
+        server.serverClients.remove(user)
         return JsonResponse({'status':200})
     except Exception as err:
         return JsonResponse({'status':400,'err':err})
