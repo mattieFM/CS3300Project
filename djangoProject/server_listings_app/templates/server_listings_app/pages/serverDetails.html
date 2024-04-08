@@ -1,13 +1,45 @@
 <!-- inherit from base.html-->
 {% extends "server_listings_app/base_template.html" %}
-
-
-
+{% load server %}
 {% block content %}
+<script>
+    function confirmSubmission() {
+        // Display a confirmation dialog
+        var result = confirm("Are you sure you want to submit this form?");
+        // If the user confirms, return true to submit the form
+        return result;
+    }
+</script>
 
+<script>
+    $(document).ready(function(){
+        
+        // When the button is clicked
+        $("#joinBtn").click(function(){
+            // Perform a POST request using AJAX
+            $.ajax({
+                type: "POST",
+                url: "{% url 'server_join' server.id 1 %}", 
+                success: function(data) {
+                    window.location.reload();
+                },
+            });
+        });
 
-
-
+        // When the button is clicked
+        $(".kickBtn").click(function(){
+            // Perform a POST request using AJAX
+            $.ajax({
+                type: "POST",
+                url: "{% url 'server_leave' server.id 1 %}",
+                success: function(data) {
+                    window.location.reload();
+                },
+            });
+        });
+    });
+    </script>
+    
 <body>
     <div class="container mt-5">
         <h1>{{ server.title }}</h1>
@@ -16,36 +48,23 @@
         <h2>Clients</h2>
         <div class="row">
             {% for client in server.serverClients.all %}
-            
-            <div class="col-md-4 mb-4">
-                <div class="card">
-                    <div class="card-body">
-                        <h5 class="card-title">{{ client.username }}</h5>
-                     
-                    </div>
-                </div>
-            </div>
-           
-            
-            {% empty %}
+                {% include "server_listings_app/components/user_card.html" with user=client kick=True view=True%}
+                {% empty %}
             <div class="col">
                 <p>No clients currently connected.</p>
             </div>
             {% endfor %}
         </div>
+        <a class="btn btn-primary" id="joinBtn">Join Server</a> 
         {% ifDemo %}
+        <a class="btn btn-primary" href="{% url 'server_update' server.id 'server' 0 %}">Edit Server</a> 
         <form action="{% url 'server_delete' server.id 'none' %}" method="post" onsubmit="return confirmSubmission();">
             {% csrf_token %}
             <input type="submit" value="Delete Server" class="btn btn-secondary">
         </form> 
-        <a class="btn btn-primary" href="{% url 'server_update' server.id %}">Edit Server</a> 
         {% endifDemo %}
     </div>
 
-    <!-- Bootstrap JS and dependencies (optional) -->
-    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 </body>
 </html>
 

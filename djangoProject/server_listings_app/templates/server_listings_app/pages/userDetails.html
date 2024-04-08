@@ -1,0 +1,21 @@
+<!-- inherit from base.html-->
+{% extends "server_listings_app/base_template.html" %}
+
+{% block content %}
+<script>
+    function confirmSubmission() {
+        // Display a confirmation dialog
+        var result = confirm("Are you sure you want to submit this form?");
+        // If the user confirms, return true to submit the form
+        return result;
+    }
+</script>
+{% include "server_listings_app/components/user_card.html" with user=user %}
+{% ifDemo %}
+        <form action="{% url 'user_delete' user.id 'users' %}" method="post" onsubmit="return confirmSubmission();">
+            {% csrf_token %}
+            <input type="submit" value="Delete User" class="btn btn-secondary">
+        </form> 
+        <a class="btn btn-primary" href="{% url 'user_update' user.id 'user' 0 %}">Edit User</a> 
+{% endifDemo %}
+{% endblock %}

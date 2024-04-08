@@ -8,3 +8,9 @@ class ServerForm(ModelForm):
     class Meta:
         model = Server
         fields = ["title", "description", "password", "is_active"]
+
+
+class UserForm(ModelForm):
+    class Meta:
+        model = User
+        fields = ['username']

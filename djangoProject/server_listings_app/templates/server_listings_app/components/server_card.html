@@ -1,0 +1,26 @@
+<div class="col-md-4 mb-4">
+    <div class="card 
+    {% if server.is_active == 0 %}
+    disabled-card  
+    {% endif %}
+    ">
+
+        <h5 class="card-header">
+            {% if server.is_active == 0 %}
+                <s>
+            {% endif %}
+            {{server.title}}
+            {% if server.is_active == 0 %}
+                </s>
+            {% endif %}
+            
+        </h5>
+        <div class="card-body">
+            <p>Description: {{ server.description }}</p>
+            <!-- Add other server fields as needed -->
+            <div class="card-footer text-muted">
+                <a class="btn btn-secondary" href="{% url 'server' server.id %}">View server</a>
+            </div>
+        </div>
+    </div>
+</div>

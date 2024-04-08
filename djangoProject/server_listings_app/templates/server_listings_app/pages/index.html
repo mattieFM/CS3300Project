@@ -2,23 +2,6 @@
 {% extends "server_listings_app/base_template.html" %}
 
 {% block content %}
-<div class="container mt-4">
-    <h2 class="mb-4">Active Servers</h2>
-    <div class="row">
-        {% for server in active_servers %}
-        <div class="col-md-4 mb-4">
-            <div class="card">
-                <h5 class="card-header">{{  server.title }}</h5>
-                <div class="card-body">
-                    <p>Description: {{ server.description }}</p>
-                    <!-- Add other server fields as needed -->
-                    <div class="card-footer text-muted">
-                        <a class="btn btn-secondary" href="{% url 'server' server.id %}">View server</a>
-                    </div>
-                </div>
-            </div>
-        </div>
-        {% endfor %}
-    </div>
-</div>
+<div class="container mt-4"><h2 class="mb-4">Servers</h2></div>
+{% include "server_listings_app/components/server_list.html" with servers=active_servers %}
 {% endblock %}

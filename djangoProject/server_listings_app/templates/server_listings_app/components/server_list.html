@@ -1,0 +1,10 @@
+<div class="container mt-4">
+    <div class="row">
+        {% for server in servers %}
+        {% include "server_listings_app/components/server_card.html" with server=server %}
+        {% endfor %}
+    </div>
+    {% ifDemo %}
+        <a class="btn btn-secondary" href="{% url 'server_create' 0 'index' 1 %}">New Server</a> 
+    {% endifDemo %}
+</div>

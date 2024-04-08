@@ -1,5 +1,5 @@
 import sys
-from django.http import HttpResponseRedirect
+from django.http import HttpResponseRedirect, JsonResponse
 from django.shortcuts import render, HttpResponse
 from django.urls import reverse
 from .models import Server, User
@@ -13,11 +13,36 @@ def index(request):
     # Render index.html
     return render( request, 'server_listings_app/pages/index.html', {'active_servers':active_servers})
 
+def search_servers(request):
+    query = request.GET.get('q')
+    if(query == None):
+        query=""
+    #name__icontains is case insenstitive containment test see: https://docs.djangoproject.com/en/2.1/ref/models/querysets/#icontains
+    servers = Server.objects.filter(title__icontains=query)
+    # Render index.html
+    return render( request, 'server_listings_app/pages/servers.html', {'active_servers':servers})
+
 def server(request, server_pk):
     # Retrieve the server object using the provided ID
     server = Server.objects.get(pk=server_pk)
     return render( request, 'server_listings_app/pages/serverDetails.html', {'server':server})
 
+def user(request, user_pk):
+    # Retrieve the server object using the provided ID
+    user = User.objects.get(pk=user_pk)
+    return render( request, 'server_listings_app/pages/userDetails.html', {'user':user})
+
+#student list page
+def user_list(request):
+    users = User.objects.all()
+    return render(request, 'server_listings_app/pages/user_list.html', {'users': users})
+
+#querried student list page
+def search_users(request):
+    query = request.GET.get('q')
+    #name__icontains is case insenstitive containment test see: https://docs.djangoproject.com/en/2.1/ref/models/querysets/#icontains
+    users = User.objects.filter(username__icontains=query)
+    return render(request, 'server_listings_app/pages/user_list.html', {'users': users})
 
 def login():
     pass
@@ -25,9 +50,12 @@ def login():
 def logout():
     pass
 
-
-
-def generic_update(request, id, Model, Form, returnView, title="server", pk=None):
+def generic_update(request, id, Model, Form, title, backToView, useArgs):
+    """
+    useArgs: whether to use args or returnid"""
+    path=request.path
+    pathArgs=path.split('/')[6:]
+    id=int(id)
     form = None
     model = None
     if(id==0):
@@ -48,11 +76,14 @@ def generic_update(request, id, Model, Form, returnView, title="server", pk=None
             # redirect to a new URL:
             model = form.save()          
             returnid=str(model.pk)
+            if(not returnid):
+                returnid=id
             
-            if(pk!=None):
-                returnid=str(pk)
-            
-            return HttpResponseRedirect("/"+returnView+returnid+'/')
+            args=[returnid]
+            if(useArgs=='1'):
+                args=pathArgs
+                            
+            return HttpResponseRedirect(reverse(backToView, args=args))
     # if a GET (or any other method) we'll create a blank form
     else:
         return render(request, 'server_listings_app/pages/genericFormUpdate.html', {"form": form, "title": title, "model":model})
@@ -92,4 +123,21 @@ def generic_delete(request, id, Model, backToView=None):
         
                 
 
-            
+def add_client_to_server(reqeust, clientid, serverid):
+    try:
+        server = Server.objects.get(pk=serverid)
+        server.serverClients.add(User.objects.get(pk=clientid))
+        return JsonResponse({'status':200})
+    except Exception as err:
+        return JsonResponse({'status':400,'err':err})
+
+    
+    
+    
+def remove_client_from_server(reqeust, clientid, serverid):
+    try:
+        server = Server.objects.get(pk=serverid)
+        server.serverClients.remove(User.objects.get(pk=clientid))
+        return JsonResponse({'status':200})
+    except Exception as err:
+        return JsonResponse({'status':400,'err':err})

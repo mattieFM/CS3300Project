@@ -1,0 +1,8 @@
+.mynavcolor {
+    background-color: #362828;
+}
+
+.disabled-card {
+    opacity: 0.7; /* reduce opacity to indicate disabled state */
+    pointer-events: none; /* disable pointer events */
+  }
