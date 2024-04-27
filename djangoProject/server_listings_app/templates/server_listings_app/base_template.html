@@ -1,0 +1,76 @@
+{% load static %}
+{% load widget_tweaks %}
+
+<!DOCTYPE html>
+<html lang="en">
+ <head>
+   <title>UCCS CS Students</title>
+   <meta charset="utf-8">
+   <meta name="viewport" content="width=device-width, initial-scale=1">
+   
+   <link href="{% static 'bootstrap-5.3.3-dist/css/bootstrap.css' %}" rel="stylesheet">
+   <script src="{% static 'js/jquery-3.7.1.js' %}"></script>
+   <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
+   <script src="{% static 'bootstrap-5.3.3-dist/js/bootstrap.min.js' %}"></script>
+   <link rel="stylesheet" href="{% static 'css/base.css' %}">
+   <script>
+      $(function () {
+        $.ajaxSetup({
+            headers: { "X-CSRFToken": '{{ csrf_token }}' }
+        });
+    });
+  </script>
+  </head>
+
+
+ <body>
+     <nav class="navbar navbar-expand-lg navbar-dark navbar-custom mynavcolor">
+      <div class="container" style=" margin-right: 0; margin-left: 0; padding-right:0">
+        <!-- Left side items -->
+        <ul class="navbar-nav mr-auto">
+          <a style="width:10%" id="navLogo" class="nav-link- active" aria-current="page" href="{% url 'index' %}" >    <img style="width:70%" src="{% static 'img/value-server-512.webp' %}"></a>
+          <li class="nav-item">
+            <a class="nav-link text-white" id="navUsers" href="{% url 'users' %}">Users</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link text-white" id="navServers" href="{% url 'search_servers' %}">All Servers</a>
+          </li>
+        </ul>
+        
+        <!-- Right side items -->
+        <ul class="navbar-nav ml-auto">
+          <li class="nav-item">
+            {% if user.is_authenticated %}
+            <a class="nav-link text-white" id="navProfile" href="{% url 'profile' %}">Profile</a>
+            {% else %}
+            <a class="nav-link text-white" id="navRegister" href="{% url 'register' %}">Register</a> 
+            {% endif %}
+          </li>
+
+          
+          <li class="nav-item">
+            {% if user.is_authenticated %}
+            <form action="{% url 'logout' %}" method="post" style="display: inline;">
+              {% csrf_token %}
+              <input type="hidden" name="next" value="{{ request.path }}">
+              <button type="submit" id="navLogout" class="nav-link text-white btn btn-link">Logout</button>
+            </form>
+            {% else %}
+              <a class="nav-link text-white" id="navLogin" href="{% url 'login' %}?next={{ request.path }}">Login</a>
+            {% endif %}
+          </li>
+        </ul>
+      </div>
+    </nav>
+
+
+       <div class="col-sm-10">
+         <!-- add block content from html template -->
+         {% block content %}
+
+         {% endblock %}
+       </div>
+     </div>
+ 
+ </body>
+</html>

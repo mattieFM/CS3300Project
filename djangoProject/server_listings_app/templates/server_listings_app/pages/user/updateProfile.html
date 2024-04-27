@@ -1,0 +1,14 @@
+{% extends "server_listings_app/pages/genericFormUpdate.html" %}
+
+{# override needed context of our generic form #}
+{% block content %}
+    {% with title='Update Profile Info' overrideTitle='True' %}
+        {{block.super}}
+    {% endwith %}
+{% endblock %}
+{% block more_forms_top %}
+<hr/>
+<p><a href="{% url 'password_change' %}" class="btn btn-secondary">Update Password</a></p>
+{% endblock %}
+
+

@@ -1,0 +1,20 @@
+{% extends "server_listings_app/pages/genericFormUpdate.html" %}
+
+{# override needed context of our generic form #}
+{% block content %}
+    <div id ="loginPageContainer">
+    {% with title='Login' overrideTitle='True' %}
+        {{block.super}}
+    {% endwith %}
+    </div>
+{% endblock %}
+
+{# add in the reset password link #}
+{% block footer %}
+<hr/>
+<p><a href="{% url 'password_reset' %}" class="btn btn-secondary">Lost password?</a></p>
+{% endblock %}
+
+
+
+

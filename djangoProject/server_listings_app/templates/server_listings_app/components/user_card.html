@@ -1,0 +1,32 @@
+<div class="col-md-4 mb-4">
+    <div class="card">
+        <div class="card-body">
+            {% block fullCardBody %}
+            {% block cardBody %}
+            <h5 class="card-title" id="userName">{{ user.username }}</h5>
+            <hr/>
+            <span>
+                {% if user.bio %}
+                <span id ="userBio">
+                    {{user.bio}}
+                </span>
+                    
+                {% endif %}
+            </span>
+            {% endblock %}
+            <div class="card-footer text-muted">
+                {% block footer %}
+                    {% if view %}
+                    <a class="btn btn-secondary" href="{% url 'user' user.id %}" id="viewUserBtn">View User</a>
+                    {% endif %}
+                    {% if kick %}
+                        {% ifDemo %}
+                        <a class="btn btn-primary kickBtn" id="kickBtn_{{user.id}}" id="kickPlayerBtn">Kick Player</a> 
+                        {% endifDemo %}
+                    {% endif %}
+                {% endblock %}
+            </div>
+           {% endblock %}
+        </div>
+    </div>
+</div>

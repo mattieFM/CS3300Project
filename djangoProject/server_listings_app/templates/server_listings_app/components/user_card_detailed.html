@@ -1,0 +1,27 @@
+{% extends "server_listings_app/components/user_card.html" %}
+
+{% block cardBody %}
+    {{block.super}}
+    <script>
+        function confirmSubmission() {
+            // Display a confirmation dialog
+            var result = confirm("Are you sure you want to delet your account permanently?");
+            // If the user confirms, return true to submit the form
+            return result;
+        }
+    </script>
+    <hr/>
+    {% if user.currentServer %}
+    <h3>Currently Playing in:</h3>
+    {% include "server_listings_app/components/server_card.html" with server=user.currentServer %}
+    {% else %}
+    <p>user not currently in a server </p>
+    {% endif %}
+    {% ifDemo %}
+            <form action="{% url 'user_delete' user.id 'users' %}" method="post" onsubmit="return confirmSubmission();">
+                {% csrf_token %}
+                <input type="submit" value="Delete User" class="btn btn-secondary">
+            </form> 
+            <a class="btn btn-primary" href="{% url 'user_update' user.id 'user' 0 %}">Edit User</a> 
+    {% endifDemo %}
+{% endblock %}

@@ -1,0 +1,15 @@
+{% extends "server_listings_app/pages/genericFormUpdate.html" %}
+
+{# override needed context of our generic form #}
+{% block content %}
+    {% with title='Reset Password' overrideTitle='True' %}
+        {{block.super}}
+    {% endwith %}
+{% endblock %}
+
+
+
+
+
+
+

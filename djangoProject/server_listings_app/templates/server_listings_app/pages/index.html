@@ -1,0 +1,7 @@
+<!-- inherit from base.html-->
+{% extends "server_listings_app/base_template.html" %}
+
+{% block content %}
+<div class="container mt-4" id="home"><h2 class="mb-4">Active Servers</h2></div>
+{% include "server_listings_app/components/server_list.html" with servers=active_servers %}
+{% endblock %}

@@ -1,0 +1,13 @@
+{% extends "server_listings_app/pages/userDetails.html" %}
+
+{% block content %}
+<div id ="userProfileContainer">
+    {{block.super}}
+    <a class="btn btn-primary" href="{% url 'user_update' user.id 'user' 0 %}">Edit Profile</a> 
+    <form action="{% url 'user_delete' user.id 'users' %}" method="post" onsubmit="return confirmSubmission();">
+        {% csrf_token %}
+        <input type="submit" value="Delete Profile (Irreversible)" class="btn btn-secondary">
+    </form> 
+</div>
+{% endblock %}
+

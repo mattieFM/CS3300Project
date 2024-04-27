@@ -1,0 +1,35 @@
+{% extends "server_listings_app/base_template.html" %}
+
+{% block content %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Student List</title>
+    <style>
+        /* Custom CSS for styling */
+        .student-card {
+            margin-bottom: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container" id ="userListContainer">
+        <h1>Users</h1>
+        <form class="form-inline mb-4" method="GET" action="{% url 'search_users' %}">
+            <input class="form-control mr-sm-2" type="search" id="userSearchBox" placeholder="Search" aria-label="Search" name="q">
+            <button class="btn btn-primary my- my-sm-0" id="userSearchBtn" type="submit">Search</button>
+        </form>
+        <div class="row">
+            {% for user in users %}
+                {% include "server_listings_app/components/user_card.html" with user=user view=True %}
+            {% endfor %}
+        </div>
+    </div>
+    {% ifDemo %}
+    <a class="btn btn-secondary" href="{% url 'user_create' 0 'users' 1 %}">New User</a> 
+    {% endifDemo %}
+</body>
+</html>
+
+{% endblock %}

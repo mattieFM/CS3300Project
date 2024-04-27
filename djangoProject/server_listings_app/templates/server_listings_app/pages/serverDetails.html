@@ -1,0 +1,89 @@
+<!-- inherit from base.html-->
+{% extends "server_listings_app/base_template.html" %}
+{% load server %}
+{% block content %}
+<script>
+    function confirmSubmission() {
+        // Display a confirmation dialog
+        var result = confirm("Are you sure you want to submit this form?");
+        // If the user confirms, return true to submit the form
+        return result;
+    }
+</script>
+{% if user.is_authenticated %}
+<script>
+    
+    $(document).ready(function(){
+        clickedId=0;
+        // When the button is clicked
+        $("#joinBtn").click(function(){
+            // Perform a POST request using AJAX
+            $.ajax({
+                type: "POST",
+                url: "{% url 'server_join' server.id user.pk %}", 
+                success: function(data) {
+                    window.location.reload();
+                },
+            });
+        });
+
+        $("#leaveBtn").click(function(){
+            // Perform a POST request using AJAX
+            $.ajax({
+                type: "POST",
+                url: "{% url 'server_leave' server.id user.pk %}", 
+                success: function(data) {
+                    window.location.reload();
+                },
+            });
+        });
+
+        // When the button is clicked
+        $(".kickBtn").click(function(){
+            // Perform a POST request using AJAX
+            console.log($(this))
+            $.ajax({
+                type: "POST",
+                url: `{% url 'server_leave' server.id 0 %}`,
+                success: function(data) {
+                    window.location.reload();
+                },
+            });
+        });
+    });
+    </script>
+    {% endif %}
+    
+<body>
+    <div class="container mt-5">
+        <h1>{{ server.title }}</h1>
+        <p>Title: {{ server.title }}</p>
+        <p>Description: {{ server.description }}</p>
+        <h2>Clients</h2>
+        <div class="row">
+            {% for client in server.serverClients.all %}
+                {% include "server_listings_app/components/user_card.html" with user=client kick=True view=True%}
+                {% empty %}
+            <div class="col">
+                <p>No clients currently connected.</p>
+            </div>
+            {% endfor %}
+        </div>
+        {% if user.is_authenticated %}
+            <a class="btn btn-primary" id="joinBtn" userId={{client.pk}}>Join Server</a> 
+            <a class="btn btn-primary" id="leaveBtn" userId={{client.pk}}>Leave Server</a> 
+        {% endif %}
+        
+        {% if user.is_authenticated %}
+        <a class="btn btn-primary" href="{% url 'server_update' server.id 'server' 0 %}">Edit Server</a> 
+        <form action="{% url 'server_delete' server.id 'none' %}" method="post" onsubmit="return confirmSubmission();">
+            {% csrf_token %}
+            <input type="submit" value="Delete Server" class="btn btn-secondary">
+        </form> 
+        {% endif %}
+    </div>
+
+</body>
+</html>
+
+{% endblock %}

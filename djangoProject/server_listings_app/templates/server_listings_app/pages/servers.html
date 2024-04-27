@@ -1,0 +1,30 @@
+{% extends "server_listings_app/base_template.html" %}
+
+{% block content %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Server List</title>
+    <style>
+        /* Custom CSS for styling */
+        .student-card {
+            margin-bottom: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container" id="serverContainer">
+        <h1>Servers</h1>
+        <form class="form-inline mb-4" method="GET" action="{% url 'search_servers' %}">
+            <input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search" name="q" id="serversSearch">
+            <button class="btn btn-primary my- my-sm-0" type="submit" id="serverSearchBtn">Search</button>
+        </form>
+        <div class="row" id="serverDisplayRow">
+            {% include "server_listings_app/components/server_list.html" with servers=active_servers %}
+        </div>
+    </div>
+</body>
+</html>
+
+{% endblock %}
