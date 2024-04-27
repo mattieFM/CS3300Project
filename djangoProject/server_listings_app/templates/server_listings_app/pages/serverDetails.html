@@ -10,16 +10,28 @@
         return result;
     }
 </script>
-
+{% if user.is_authenticated %}
 <script>
+    
     $(document).ready(function(){
-        
+        clickedId=0;
         // When the button is clicked
         $("#joinBtn").click(function(){
             // Perform a POST request using AJAX
             $.ajax({
                 type: "POST",
-                url: "{% url 'server_join' server.id 1 %}", 
+                url: "{% url 'server_join' server.id user.pk %}", 
+                success: function(data) {
+                    window.location.reload();
+                },
+            });
+        });
+
+        $("#leaveBtn").click(function(){
+            // Perform a POST request using AJAX
+            $.ajax({
+                type: "POST",
+                url: "{% url 'server_leave' server.id user.pk %}", 
                 success: function(data) {
                     window.location.reload();
                 },
@@ -29,9 +41,10 @@
         // When the button is clicked
         $(".kickBtn").click(function(){
             // Perform a POST request using AJAX
+            console.log($(this))
             $.ajax({
                 type: "POST",
-                url: "{% url 'server_leave' server.id 1 %}",
+                url: `{% url 'server_leave' server.id 0 %}`,
                 success: function(data) {
                     window.location.reload();
                 },
@@ -39,6 +52,7 @@
         });
     });
     </script>
+    {% endif %}
     
 <body>
     <div class="container mt-5">
@@ -55,14 +69,18 @@
             </div>
             {% endfor %}
         </div>
-        <a class="btn btn-primary" id="joinBtn">Join Server</a> 
-        {% ifDemo %}
+        {% if user.is_authenticated %}
+            <a class="btn btn-primary" id="joinBtn" userId={{client.pk}}>Join Server</a> 
+            <a class="btn btn-primary" id="leaveBtn" userId={{client.pk}}>Leave Server</a> 
+        {% endif %}
+        
+        {% if user.is_authenticated %}
         <a class="btn btn-primary" href="{% url 'server_update' server.id 'server' 0 %}">Edit Server</a> 
         <form action="{% url 'server_delete' server.id 'none' %}" method="post" onsubmit="return confirmSubmission();">
             {% csrf_token %}
             <input type="submit" value="Delete Server" class="btn btn-secondary">
         </form> 
-        {% endifDemo %}
+        {% endif %}
     </div>
 
 </body>

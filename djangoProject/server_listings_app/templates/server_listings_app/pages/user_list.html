@@ -14,11 +14,11 @@
     </style>
 </head>
 <body>
-    <div class="container">
+    <div class="container" id ="userListContainer">
         <h1>Users</h1>
         <form class="form-inline mb-4" method="GET" action="{% url 'search_users' %}">
-            <input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search" name="q">
-            <button class="btn btn-primary my- my-sm-0" type="submit">Search</button>
+            <input class="form-control mr-sm-2" type="search" id="userSearchBox" placeholder="Search" aria-label="Search" name="q">
+            <button class="btn btn-primary my- my-sm-0" id="userSearchBtn" type="submit">Search</button>
         </form>
         <div class="row">
             {% for user in users %}

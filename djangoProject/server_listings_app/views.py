@@ -3,7 +3,11 @@ from django.http import HttpResponseRedirect, JsonResponse
 from django.shortcuts import render, HttpResponse
 from django.urls import reverse
 from .models import Server, User
-
+from django.contrib.auth.decorators import login_required, permission_required
+from django.contrib.auth import views as auth_views
+from django.contrib.auth import authenticate, login
+from .forms import NewUserForm
+from django.views.decorators.csrf import csrf_exempt
 
 # Create your views here.
 
@@ -32,7 +36,29 @@ def server(request, server_pk):
 def user(request, user_pk):
     # Retrieve the server object using the provided ID
     user = User.objects.get(pk=user_pk)
-    return render( request, 'server_listings_app/pages/userDetails.html', {'user':user})
+    
+    #if user navigates to their own profile via id redirect them to their profile
+    if(user== request.user):
+        return profile(request)
+    else:
+        return render( request, 'server_listings_app/pages/userDetails.html', {'user':user})
+
+@login_required
+def profile(request):
+    return render( request, 'server_listings_app/pages/user/profile.html', {'user':request.user})
+
+def register(request):
+    form = NewUserForm(request.POST)
+    if request.method == "POST":
+        if(form.is_valid()):
+            new_user  = form.save()
+            new_user = authenticate(username=form.cleaned_data['username'], password=form.cleaned_data['password1'])
+            if(new_user is not None):
+                login(request, new_user)
+                return HttpResponseRedirect(reverse("home"))
+    
+    #else return get view
+    return render(request, 'server_listings_app/pages/user/register.html', {"form": form, "title": "Create A New User", "model":User})
 
 #student list page
 def user_list(request):
@@ -46,13 +72,14 @@ def search_users(request):
     users = User.objects.filter(username__icontains=query)
     return render(request, 'server_listings_app/pages/user_list.html', {'users': users})
 
-def login():
-    pass
+def logout(request):
+    if(request.method == "POST"):
+        return auth_views.LogoutView.as_view(next_page='home')(request)
+    else:
+        return render(request, 'server_listings_app/pages/auth/logout.html')
 
-def logout():
-    pass
-
-def generic_update(request, id, Model, Form, title, backToView, useArgs):
+@csrf_exempt
+def generic_update(request, id, Model, Form, title, backToView, useArgs, template_name='server_listings_app/pages/genericFormUpdate.html'):
     """
     useArgs: whether to use args or returnid"""
     path=request.path
@@ -67,9 +94,12 @@ def generic_update(request, id, Model, Form, title, backToView, useArgs):
         form = Form(instance=model)
        
     # Retrieve the portfolio object using the provided ID
-    
+    print("req:")
+    print(request)
     # create a form instance and populate it with data from the request:
     if request.method == "POST":
+        print("req body:")
+        print(request.body)
         form = Form(request.POST, instance=model)
         # check whether it's valid:
         if form.is_valid():
@@ -86,9 +116,11 @@ def generic_update(request, id, Model, Form, title, backToView, useArgs):
                 args=pathArgs
                             
             return HttpResponseRedirect(reverse(backToView, args=args))
+        else:
+            return render(request, template_name, {"form": form, "title": title, "model":model})
     # if a GET (or any other method) we'll create a blank form
     else:
-        return render(request, 'server_listings_app/pages/genericFormUpdate.html', {"form": form, "title": title, "model":model})
+        return render(request, template_name, {"form": form, "title": title, "model":model})
 
 def generic_delete(request, id, Model, backToView=None):
     """request: django request
@@ -145,3 +177,7 @@ def remove_client_from_server(reqeust, clientid, serverid):
         return JsonResponse({'status':200})
     except Exception as err:
         return JsonResponse({'status':400,'err':err})
+    
+    
+def error(err):
+    return JsonResponse({'status':400,'err':err})

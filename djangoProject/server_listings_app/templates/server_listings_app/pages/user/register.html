@@ -1,0 +1,11 @@
+{% extends "server_listings_app/pages/genericFormUpdate.html" %}
+
+{# override needed context of our generic form #}
+{% block content %}
+<div id="registerContainer">
+    {% with title='Create New Account' overrideTitle='True' %}
+        {{block.super}}
+    {% endwith %}
+</div>
+{% endblock %}
+

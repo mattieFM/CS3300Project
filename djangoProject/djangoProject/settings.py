@@ -11,6 +11,7 @@ https://docs.djangoproject.com/en/5.0/ref/settings/
 """
 
 from pathlib import Path
+from django.urls import reverse
 import os
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -28,6 +29,8 @@ DEBUG = True
 
 ALLOWED_HOSTS = []
 
+#change to use my user
+AUTH_USER_MODEL = 'server_listings_app.User'
 
 # Application definition
 
@@ -38,6 +41,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'gmailapi_backend',
     'server_listings_app',
     'widget_tweaks'
 ]
@@ -131,3 +135,12 @@ os.path.join(BASE_DIR, 'static')
 # https://docs.djangoproject.com/en/5.0/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+
+#add email backend
+EMAIL_BACKEND = 'gmailapi_backend.mail.GmailBackend'
+GMAIL_API_CLIENT_ID = '818199797475-4ljkgj6ncr5df1bfsauk8mbbsmc8egrs.apps.googleusercontent.com'
+GMAIL_API_CLIENT_SECRET = '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'
+GMAIL_API_REFRESH_TOKEN = '1//04SzaXLjkq2pvCgYIARAAGAQSNwF-L9IrXujYbrjPuMVftkPOkpH_FNae5RHDEaEoS5rzE8Im47Kkf68uezzS3fghOZow26BRBjs'
+
+LOGIN_URL="login"
