@@ -11,9 +11,9 @@ jobs:
     steps:
     - name: Install Dependencies
       run: |
-        source ./djvenv/Scripts/activate
-        pip install -r requirements.txt
+        source /djvenv/Scripts/activate
+        pip install -r /requirements.txt
     - name: Run Tests
       run: |
-        source ./djvenv/Scripts/activate
+        source /djvenv/Scripts/activate
         python manage.py test
