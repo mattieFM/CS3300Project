@@ -1,0 +1,28 @@
+{
+  "name": "testcafetests",
+  "version": "1.0.0",
+  "description": "",
+  "main": "test.js",
+  "scripts": {
+    "test-chrome": "testcafe chrome Tests/ -e",
+    "test-chrome-headless": "testcafe chrome:headless Tests/ -e",
+    "test-ie": "testcafe ie Tests/ -e",
+    "test-edge": "testcafe edge Tests/ -e",
+    "test-firefox": "testcafe firefox Tests/ -e",
+    "test-firefox-headless": "testcafe firefox:headless Tests/ -e",
+    "test": "npm run test-chrome && npm run test-ie && npm run test-edge && npm run test-firefox"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/mattieFM/CS3300Project.git"
+  },
+  "author": "mattie",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/mattieFM/CS3300Project/issues"
+  },
+  "homepage": "https://github.com/mattieFM/CS3300Project#readme",
+  "dependencies": {
+    "testcafe": "^3.6.0"
+  }
+}
